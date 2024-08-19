@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { DeviceStatus } from "@/plugins/device";
+import type { DeviceLogin } from "@/plugins/types";
 import axios from "axios";
-import { computed, onBeforeMount, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-const devicesMap = ref<
-  Record<string, { imei: string; networkStatus: string; veloId: string }>
->({});
-const cachedMessage = ref<DeviceStatus | null>(null);
+const devicesMap = ref<Record<string, DeviceLogin>>({});
+
 const router = useRouter();
 const headers = [
   { title: "IMEI", key: "imei" },
@@ -15,21 +13,18 @@ const headers = [
   { title: "", key: "" },
 ];
 
-const getJwtToken = () => {
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("Velo.JWT="))
-    ?.split("=")[1];
-};
+const jwtToken = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("Velo.JWT="))
+  ?.split("=")[1];
 
-const jwtToken = getJwtToken();
 const hasJwtToken = computed(() => jwtToken !== undefined && jwtToken !== null);
 
 const devices = computed(() =>
   Object.entries(devicesMap.value).map(([imei, device]) => ({
     imei,
-    networkStatus: device.networkStatus || "Unknown",
-    veloId: device.veloId || "N/A",
+    networkStatus: device?.loginData.networkStatus || "Unknown",
+    veloId: device?.veloId || "N/A",
   }))
 );
 
@@ -44,7 +39,7 @@ const viewDetails = (item: {
 const fetchLastCachedMessage = async () => {
   try {
     const response = await axios.get(
-      "https://velopera.voxel.at/ui/api/lastMessage",
+      "https://velopera.voxel.at/ui/api/lastLoginMessage",
       {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -55,16 +50,9 @@ const fetchLastCachedMessage = async () => {
     const deviceData = response.data;
 
     Object.keys(deviceData).forEach((key) => {
-      const deviceStatus = deviceData[key];
-      if (deviceStatus && deviceStatus.statusData) {
-        devicesMap.value[deviceStatus.imei] = {
-          imei: deviceStatus.imei,
-          networkStatus: deviceStatus.statusData.networkStatus || "Unknown",
-          veloId: deviceStatus.veloId,
-        };
-        cachedMessage.value = deviceStatus;
-      } else {
-        console.error("Invalid device status data:", deviceStatus);
+      const deviceStatus: DeviceLogin = deviceData[key];
+      if (deviceStatus && deviceStatus.loginData) {
+        devicesMap.value[deviceStatus.imei] = deviceStatus;
       }
     });
   } catch (error) {
@@ -83,7 +71,7 @@ const fetchLastCachedMessage = async () => {
   }
 };
 
-onBeforeMount(() => {
+onMounted(() => {
   if (hasJwtToken.value) {
     fetchLastCachedMessage();
   }

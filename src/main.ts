@@ -1,5 +1,5 @@
 import App from "@/App.vue";
-import "@/plugins/device";
+import "@/plugins/types";
 import router from "@/router";
 import "@mdi/font/css/materialdesignicons.css";
 import { createApp } from "vue";

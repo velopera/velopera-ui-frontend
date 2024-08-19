@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DeviceStatus } from "@/plugins/device";
+import type { DeviceStatus } from "@/plugins/types";
 import axios from "axios";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -9,20 +9,17 @@ const router = useRouter();
 const veloId = route.query.veloId;
 const deviceStatus = ref<DeviceStatus | null>(null);
 
-const getJwtToken = () => {
-  return document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("Velo.JWT="))
-    ?.split("=")[1];
-};
+const jwtToken = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("Velo.JWT="))
+  ?.split("=")[1];
 
-const jwtToken = getJwtToken();
 const hasJwtToken = computed(() => jwtToken !== undefined && jwtToken !== null);
 
 const fetchLastCachedMessage = async () => {
   try {
     const response = await axios.get(
-      `https://velopera.voxel.at/ui/api/lastMessage/${veloId}`,
+      `https://velopera.voxel.at/ui/api/lastStatusMessage/${veloId}`,
       {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -72,7 +69,7 @@ const detailedStatus = computed(() => {
     title: key
       .replace(/_/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase()),
-    value: typeof value === "number" ? value.toFixed(2) : value,
+    value: value,
   }));
 });
 </script>

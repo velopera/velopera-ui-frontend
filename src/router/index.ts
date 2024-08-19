@@ -32,14 +32,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const getJwtToken = () => {
-    return document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("Velo.JWT="))
-      ?.split("=")[1];
-  };
+  const jwtToken = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("Velo.JWT="))
+    ?.split("=")[1];
 
-  const jwtToken = getJwtToken();
   const hasJwtToken = computed(
     () => jwtToken !== undefined && jwtToken !== null
   );
