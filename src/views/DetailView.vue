@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DeviceStatus } from "@/plugins/types";
 import axios from "axios";
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -52,9 +52,25 @@ onMounted(() => {
   if (hasJwtToken.value) {
     fetchLastCachedMessage();
   }
-});
 
-onUnmounted(() => {});
+  const instance = getCurrentInstance();
+
+  if (instance) {
+    const socket = instance.appContext.config.globalProperties.$socket;
+
+    const handleStatusUpdate = (statusData: DeviceStatus) => {
+      if (statusData.veloId === veloId) {
+        deviceStatus.value = statusData;
+      }
+    };
+
+    socket.on("statusUpdate", handleStatusUpdate);
+
+    onUnmounted(() => {
+      socket.off("statusUpdate", handleStatusUpdate);
+    });
+  }
+});
 
 const goBack = () => {
   router.push({ name: "Home" });
@@ -98,16 +114,16 @@ const detailedStatus = computed(() => {
                   <v-row align-content="center" no-gutters>
                     <v-col cols="6">
                       <v-list-item-content>
-                        <v-list-item-title
-                          >{{ item.title }} :</v-list-item-title
-                        >
+                        <v-list-item-subtitle>
+                          {{ item.title }} :
+                        </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-col>
                     <v-col cols="6">
                       <v-list-item-content>
-                        <v-list-item-subtitle>{{
-                          item.value
-                        }}</v-list-item-subtitle>
+                        <v-list-item-title>
+                          {{ item.value }}
+                        </v-list-item-title>
                       </v-list-item-content>
                     </v-col>
                   </v-row>

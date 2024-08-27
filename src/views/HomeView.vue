@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DeviceLogin } from "@/plugins/types";
 import axios from "axios";
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const devicesMap = ref<Record<string, DeviceLogin>>({});
@@ -75,13 +75,46 @@ onMounted(() => {
   if (hasJwtToken.value) {
     fetchLastCachedMessage();
   }
+  const instance = getCurrentInstance();
+
+  if (instance) {
+    const socket = instance.appContext.config.globalProperties.$socket;
+
+    const handleLoginUpdate = (loginData: DeviceLogin) => {
+      const { imei, veloId, loginData: networkStatus } = loginData;
+
+      if (imei && veloId && networkStatus) {
+        devicesMap.value[imei] = { imei, veloId, loginData: networkStatus };
+      }
+    };
+
+    socket.on("loginUpdate", handleLoginUpdate);
+
+    onUnmounted(() => {
+      socket.off("loginUpdate", handleLoginUpdate);
+      socket.disconnect();
+    });
+  }
 });
 
-onUnmounted(() => {});
+const logout = async () => {
+  try {
+    await axios.post("/ui/api/logout");
 
-const logout = () => {
-  document.cookie = "Velo.JWT=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  router.push("/login");
+    const instance = getCurrentInstance();
+
+    if (instance) {
+      const socket = instance.appContext.config.globalProperties.$socket;
+
+      socket.off("loginUpdate");
+
+      socket.disconnect();
+    }
+
+    router.push("/login");
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
 };
 </script>
 

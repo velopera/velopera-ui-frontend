@@ -37,4 +37,4 @@ interface DeviceLogin {
   loginData: LoginData;
 }
 
-export type { DeviceStatus, DeviceLogin };
+export type { DeviceLogin, DeviceStatus };

@@ -2,6 +2,7 @@ import App from "@/App.vue";
 import "@/plugins/types";
 import router from "@/router";
 import "@mdi/font/css/materialdesignicons.css";
+import { io } from "socket.io-client";
 import { createApp } from "vue";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
@@ -21,6 +22,13 @@ const vuetify = createVuetify({
     defaultTheme: "light",
   },
 });
+
+const socket = io("https://velopera.voxel.at", {
+  path: "/iot_link/",
+  transports: ["websocket"],
+});
+
+app.config.globalProperties.$socket = socket;
 
 try {
   app.use(router);
