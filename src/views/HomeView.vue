@@ -39,7 +39,7 @@ const viewDetails = (item: {
 const fetchLastCachedMessage = async () => {
   try {
     const response = await axios.get(
-      "https://velopera.voxel.at/ui/api/lastLoginMessage",
+      "https://velopera.voxel.at/ui/api/loginMessage",
       {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -131,30 +131,18 @@ const logout = async () => {
               <tr>
                 <td>{{ item.imei }}</td>
                 <td>
-                  <v-chip
-                    :color="item.networkStatus === 'online' ? 'green' : 'red'"
-                  >
+                  <v-chip :color="item.networkStatus === 'online' ? 'green' : 'red'">
                     {{ item.networkStatus }}
                   </v-chip>
                 </td>
                 <td>
-                  <v-btn
-                    size="small"
-                    variant="elevated"
-                    color="blue-darken-1"
-                    @click="viewDetails(item)"
-                    >Details</v-btn
-                  >
+                  <v-btn size="small" variant="elevated" color="blue-darken-1"
+                    @click="viewDetails(item)">Details</v-btn>
                 </td>
               </tr>
             </template>
           </v-data-table>
-          <v-btn
-            class="mt-2"
-            variant="elevated"
-            color="orange-darken-1"
-            @click="logout"
-          >
+          <v-btn class="mt-2" variant="elevated" color="orange-darken-1" @click="logout">
             <v-icon>mdi-logout</v-icon> Logout
           </v-btn>
         </v-card>

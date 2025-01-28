@@ -19,7 +19,7 @@ const hasJwtToken = computed(() => jwtToken !== undefined && jwtToken !== null);
 const fetchLastCachedMessage = async () => {
   try {
     const response = await axios.get(
-      `https://velopera.voxel.at/ui/api/lastStatusMessage/${veloId}`,
+      `https://velopera.voxel.at/ui/api/deviceInfo/${veloId}`,
       {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -98,18 +98,13 @@ const detailedStatus = computed(() => {
           <v-card-title>Device Details</v-card-title>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h5"
-                >Device ID: {{ veloId }}</v-list-item-title
-              >
+              <v-list-item-title class="text-h5">Device ID: {{ veloId }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-divider :thickness="5"></v-divider>
           <v-list v-if="deviceStatus">
             <v-list-item-group>
-              <template
-                v-for="(item, index) in detailedStatus"
-                :key="`detail-${index}`"
-              >
+              <template v-for="(item, index) in detailedStatus" :key="`detail-${index}`">
                 <v-list-item>
                   <v-row align-content="center" no-gutters>
                     <v-col cols="6">
@@ -131,20 +126,10 @@ const detailedStatus = computed(() => {
               </template>
             </v-list-item-group>
           </v-list>
-          <v-progress-circular
-            v-else
-            indeterminate
-            size="50"
-          ></v-progress-circular>
+          <v-progress-circular v-else indeterminate size="50"></v-progress-circular>
 
           <v-card-actions>
-            <v-btn
-              size="small"
-              variant="elevated"
-              color="blue-darken-1"
-              @click="goBack"
-              >Go Back</v-btn
-            >
+            <v-btn size="small" variant="elevated" color="blue-darken-1" @click="goBack">Go Back</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>

@@ -45,11 +45,7 @@ const rules = {
 <template>
   <v-container fluid>
     <v-overlay :model-value="isLoading" class="align-center justify-center">
-      <v-progress-circular
-        v-if="isLoading"
-        indeterminate
-        color="white"
-      ></v-progress-circular>
+      <v-progress-circular v-if="isLoading" indeterminate color="white"></v-progress-circular>
     </v-overlay>
     <v-row justify="center">
       <v-col md="4">
@@ -57,34 +53,15 @@ const rules = {
           <v-card-title class="text-center">Login</v-card-title>
           <v-card-item>
             <v-form @submit.prevent="submit">
-              <v-text-field
-                :rules="[rules.required]"
-                prepend-inner-icon="mdi-account"
-                v-model="form.username"
-                label="Username"
-              ></v-text-field>
+              <v-text-field :rules="[rules.required]" prepend-inner-icon="mdi-account" v-model="form.username"
+                label="Username"></v-text-field>
 
-              <v-text-field
-                type="password"
-                :rules="[rules.required]"
-                prepend-inner-icon="mdi-key"
-                v-model="form.password"
-                label="Password"
-              ></v-text-field>
+              <v-text-field type="password" :rules="[rules.required]" prepend-inner-icon="mdi-key"
+                v-model="form.password" label="Password"></v-text-field>
 
-              <v-checkbox
-                v-model="form.remember"
-                label="Remember Me"
-                color="blue-darken-1"
-              ></v-checkbox>
+              <v-checkbox v-model="form.remember" label="Remember Me" color="blue-darken-1"></v-checkbox>
 
-              <v-btn
-                type="submit"
-                block
-                class="mt-2"
-                variant="elevated"
-                color="blue-darken-1"
-              >
+              <v-btn type="submit" block class="mt-2" variant="elevated" color="blue-darken-1">
                 <v-icon>mdi-login</v-icon> Login
               </v-btn>
             </v-form>
