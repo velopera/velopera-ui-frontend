@@ -76,10 +76,26 @@ onMounted(() => {
       }
     };
 
+    const handleLoginUpdate = (loginData: DeviceLogin) => {
+      if (loginData.veloId === veloId) {
+        deviceLogin.value = loginData;
+      }
+    };
+
+    const handleGpsUpdate = (gpsData: DeviceGps) => {
+      if (gpsData.veloId === veloId) {
+        deviceGps.value = gpsData;
+      }
+    };
+
     socket.on("statusUpdate", handleStatusUpdate);
+    socket.on("loginUpdate", handleLoginUpdate);
+    socket.on("gpsUpdate", handleGpsUpdate);
 
     onUnmounted(() => {
       socket.off("statusUpdate", handleStatusUpdate);
+      socket.off("loginUpdate", handleLoginUpdate);
+      socket.off("gpsUpdate", handleGpsUpdate);
     });
   }
 });
@@ -135,14 +151,10 @@ const detailedGps = computed(() => {
         <h1>{{ veloId }}</h1>
       </v-col>
     </v-row>
-
     <v-row>
       <!-- Status Details -->
       <v-col cols="12" md="4">
         <v-card class="pa-4" elevation="8">
-          <v-card-actions>
-            <v-btn size="small" variant="elevated" color="blue-darken-1" @click="goBack">Go Back</v-btn>
-          </v-card-actions>
           <v-list v-if="deviceStatus">
             <v-subheader>Status Details</v-subheader>
             <v-divider :thickness="5"></v-divider>
@@ -169,6 +181,9 @@ const detailedGps = computed(() => {
               </template>
             </v-list-item-group>
           </v-list>
+          <v-card-actions>
+            <v-btn size="small" variant="elevated" color="blue-darken-1" @click="goBack">Go Back</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
 
