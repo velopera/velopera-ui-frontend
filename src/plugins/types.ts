@@ -23,6 +23,21 @@ interface LoginData {
   iccid?: string;
 }
 
+interface GpsMsg {
+  latitude?: number;
+  longitude?: number;
+  altitude?: number;
+  accuracy?: number;
+  speed?: number;
+  speedAccuracy?: number;
+  heading?: number;
+  pdop?: number;
+  hdop?: number;
+  vdop?: number;
+  tdop?: number;
+  measId?: number;
+}
+
 // Define the structure device status data
 interface DeviceStatus {
   imei: string;
@@ -37,4 +52,11 @@ interface DeviceLogin {
   loginData: LoginData;
 }
 
-export type { DeviceLogin, DeviceStatus };
+// Define the structure device gps data
+interface DeviceGps {
+  imei: string;
+  veloId: string;
+  gpsData: GpsMsg;
+}
+
+export type {DeviceStatus, DeviceLogin, DeviceGps };

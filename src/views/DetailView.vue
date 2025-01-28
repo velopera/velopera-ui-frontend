@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DeviceStatus } from "@/plugins/types";
+import type { DeviceStatus, DeviceLogin, DeviceGps } from "@/plugins/types";
 import axios from "axios";
 import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -8,6 +8,8 @@ const route = useRoute();
 const router = useRouter();
 const veloId = route.query.veloId;
 const deviceStatus = ref<DeviceStatus | null>(null);
+const deviceLogin = ref<DeviceLogin | null>(null);
+const deviceGps = ref<DeviceGps | null>(null);
 
 const jwtToken = document.cookie
   .split("; ")
@@ -27,10 +29,20 @@ const fetchLastCachedMessage = async () => {
       }
     );
 
-    if (response.data.veloId === veloId) {
-      deviceStatus.value = response.data;
+    if (response.data) {
+      if (response.data.status?.veloId === veloId) {
+        deviceStatus.value = response.data.status;
+      }
+
+      if (response.data.login?.veloId === veloId) {
+        deviceLogin.value = response.data.login;
+      }
+
+      if (response.data.gps?.veloId === veloId) {
+        deviceGps.value = response.data.gps;
+      }
     } else {
-      console.error("No device found with the specified device Id");
+      console.error("No data found for the specified device Id");
     }
   } catch (error) {
     console.error("Failed to fetch last cached message:", error);
@@ -88,23 +100,54 @@ const detailedStatus = computed(() => {
     value: value,
   }));
 });
+
+const detailedLogin = computed(() => {
+  if (!deviceLogin.value) return [];
+
+  const { loginData } = deviceLogin.value;
+  return Object.entries(loginData).map(([key, value]) => ({
+    key,
+    title: key
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    value: value,
+  }));
+});
+
+const detailedGps = computed(() => {
+  if (!deviceGps.value) return [];
+
+  const { gpsData } = deviceGps.value;
+  return Object.entries(gpsData).map(([key, value]) => ({
+    key,
+    title: key
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    value: value,
+  }));
+});
 </script>
 
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="12" lg="10" md="8">
+  <v-container fluid>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <h1>{{ veloId }}</h1>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <!-- Status Details -->
+      <v-col cols="12" md="4">
         <v-card class="pa-4" elevation="8">
-          <v-card-title>Device Details</v-card-title>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h5">Device ID: {{ veloId }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider :thickness="5"></v-divider>
+          <v-card-actions>
+            <v-btn size="small" variant="elevated" color="blue-darken-1" @click="goBack">Go Back</v-btn>
+          </v-card-actions>
           <v-list v-if="deviceStatus">
+            <v-subheader>Status Details</v-subheader>
+            <v-divider :thickness="5"></v-divider>
             <v-list-item-group>
-              <template v-for="(item, index) in detailedStatus" :key="`detail-${index}`">
+              <template v-for="(item, index) in detailedStatus" :key="`status-${index}`">
                 <v-list-item>
                   <v-row align-content="center" no-gutters>
                     <v-col cols="6">
@@ -126,11 +169,70 @@ const detailedStatus = computed(() => {
               </template>
             </v-list-item-group>
           </v-list>
-          <v-progress-circular v-else indeterminate size="50"></v-progress-circular>
+        </v-card>
+      </v-col>
 
-          <v-card-actions>
-            <v-btn size="small" variant="elevated" color="blue-darken-1" @click="goBack">Go Back</v-btn>
-          </v-card-actions>
+      <!-- Login Details -->
+      <v-col cols="12" md="4">
+        <v-card class="pa-4" elevation="8">
+          <v-list v-if="deviceLogin">
+            <v-subheader>Login Details</v-subheader>
+            <v-divider :thickness="5"></v-divider>
+            <v-list-item-group>
+              <template v-for="(item, index) in detailedLogin" :key="`login-${index}`">
+                <v-list-item>
+                  <v-row align-content="center" no-gutters>
+                    <v-col cols="6">
+                      <v-list-item-content>
+                        <v-list-item-subtitle>
+                          {{ item.title }} :
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ item.value }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-col>
+                  </v-row>
+                </v-list-item>
+              </template>
+            </v-list-item-group>
+          </v-list>
+        </v-card>
+      </v-col>
+
+      <!-- GPS Details -->
+      <v-col cols="12" md="4">
+        <v-card class="pa-4" elevation="8">
+          <v-list v-if="deviceGps">
+            <v-subheader>GPS Details</v-subheader>
+            <v-divider :thickness="5"></v-divider>
+            <v-list-item-group>
+              <template v-for="(item, index) in detailedGps" :key="`gps-${index}`">
+                <v-list-item>
+                  <v-row align-content="center" no-gutters>
+                    <v-col cols="6">
+                      <v-list-item-content>
+                        <v-list-item-subtitle>
+                          {{ item.title }} :
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          {{ item.value }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-col>
+                  </v-row>
+                </v-list-item>
+              </template>
+            </v-list-item-group>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
