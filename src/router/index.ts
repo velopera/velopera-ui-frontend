@@ -26,20 +26,12 @@ const routes = [
   // TODO: Other roots
 ];
 
-const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
-  routes,
-});
+const router = createRouter({ history: createWebHashHistory(import.meta.env.BASE_URL), routes, });
 
 router.beforeEach((to, from, next) => {
-  const jwtToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("Velo.JWT="))
-    ?.split("=")[1];
+  const jwtToken = document.cookie.split("; ").find((row) => row.startsWith("Velo.JWT="))?.split("=")[1];
 
-  const hasJwtToken = computed(
-    () => jwtToken !== undefined && jwtToken !== null
-  );
+  const hasJwtToken = computed(() => jwtToken !== undefined && jwtToken !== null);
 
   if (to.meta.requiresAuth && !hasJwtToken.value) {
     next({ name: "Login" });

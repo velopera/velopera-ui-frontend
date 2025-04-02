@@ -7,27 +7,21 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const veloId = route.query.veloId;
-const deviceStatus = ref<DeviceStatus | null>(null);
-const deviceLogin = ref<DeviceLogin | null>(null);
-const deviceGps = ref<DeviceGps | null>(null);
+const deviceStatus = ref<DeviceStatus>();
+const deviceLogin = ref<DeviceLogin>();
+const deviceGps = ref<DeviceGps>();
 
-const jwtToken = document.cookie
-  .split("; ")
-  .find((row) => row.startsWith("Velo.JWT="))
-  ?.split("=")[1];
+const jwtToken = document.cookie.split("; ").find((row) => row.startsWith("Velo.JWT="))?.split("=")[1];
 
 const hasJwtToken = computed(() => jwtToken !== undefined && jwtToken !== null);
 
 const fetchLastCachedMessage = async () => {
   try {
-    const response = await axios.get(
-      `https://velopera.voxel.at/ui/api/deviceInfo/${veloId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      }
-    );
+    const response = await axios.get(`https://velopera.voxel.at/ui/api/deviceInfo/${veloId}`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    });
 
     if (response.data) {
       if (response.data.status?.veloId === veloId) {
@@ -110,9 +104,7 @@ const detailedStatus = computed(() => {
   const { statusData } = deviceStatus.value;
   return Object.entries(statusData).map(([key, value]) => ({
     key,
-    title: key
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    title: key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
     value: value,
   }));
 });
@@ -123,9 +115,7 @@ const detailedLogin = computed(() => {
   const { loginData } = deviceLogin.value;
   return Object.entries(loginData).map(([key, value]) => ({
     key,
-    title: key
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    title: key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
     value: value,
   }));
 });
@@ -136,9 +126,7 @@ const detailedGps = computed(() => {
   const { gpsData } = deviceGps.value;
   return Object.entries(gpsData).map(([key, value]) => ({
     key,
-    title: key
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase()),
+    title: key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
     value: value,
   }));
 });
