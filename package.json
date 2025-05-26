@@ -17,13 +17,13 @@
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.14",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.8.5"
+    "vuetify": "^3.8.6"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@tsconfig/node18": "^18.2.4",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^22.15.19",
+    "@types/node": "^22.15.21",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/tsconfig": "^0.7.0",
     "npm-run-all2": "^8.0.4",
