@@ -23,7 +23,7 @@
     "@mdi/font": "^7.4.47",
     "@tsconfig/node18": "^18.2.4",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^24.0.3",
+    "@types/node": "^24.0.7",
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/tsconfig": "^0.7.0",
     "npm-run-all2": "^8.0.4",
