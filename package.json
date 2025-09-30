@@ -15,7 +15,7 @@
     "axios": "^1.12.2",
     "js-cookie": "^3.0.5",
     "socket.io-client": "^4.8.1",
-    "vue": "^3.5.21",
+    "vue": "^3.5.22",
     "vue-router": "^4.5.1",
     "vuetify": "^3.10.3"
   },
@@ -23,12 +23,12 @@
     "@mdi/font": "^7.4.47",
     "@tsconfig/node18": "^18.2.4",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^24.5.2",
+    "@types/node": "^24.6.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
     "npm-run-all2": "^8.0.4",
     "typescript": "~5.9.2",
     "vite": "^7.1.7",
-    "vue-tsc": "^3.0.8"
+    "vue-tsc": "^3.1.0"
   }
 }
