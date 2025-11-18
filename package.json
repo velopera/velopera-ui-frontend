@@ -17,18 +17,18 @@
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.24",
     "vue-router": "^4.6.3",
-    "vuetify": "^3.10.9"
+    "vuetify": "^3.10.11"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
-    "@tsconfig/node18": "^18.2.4",
+    "@tsconfig/node18": "^18.2.6",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/tsconfig": "^0.8.1",
     "npm-run-all2": "^8.0.4",
     "typescript": "~5.9.3",
     "vite": "^7.2.2",
-    "vue-tsc": "^3.1.1"
+    "vue-tsc": "^3.1.4"
   }
 }
