@@ -12,7 +12,7 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "axios": "^1.16.1",
+    "axios": "^1.18.0",
     "js-cookie": "^3.0.8",
     "socket.io-client": "^4.8.3",
     "vue": "^3.5.38",
@@ -23,12 +23,12 @@
     "@mdi/font": "^7.4.47",
     "@tsconfig/node18": "^18.2.6",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^25.9.3",
+    "@types/node": "^26.0.0",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/tsconfig": "^0.9.1",
     "npm-run-all2": "^9.0.2",
     "typescript": "~6.0.2",
     "vite": "^8.0.16",
-    "vue-tsc": "^3.2.7"
+    "vue-tsc": "^3.3.5"
   }
 }
