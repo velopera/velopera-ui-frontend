@@ -15,7 +15,7 @@
     "axios": "^1.18.0",
     "js-cookie": "^3.0.8",
     "socket.io-client": "^4.8.3",
-    "vue": "^3.5.38",
+    "vue": "^3.5.39",
     "vue-router": "^5.0.4",
     "vuetify": "^4.1.0"
   },
